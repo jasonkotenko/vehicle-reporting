@@ -27,7 +27,9 @@ services:
     build:
       context: ./frontend
       args:
-        VITE_API_BASE_URL: ${PUBLIC_API_URL}
+        VITE_API_BASE_URL: ""
+    depends_on:
+      - api
     ports:
       - "${FRONTEND_PORT:-3000}:80"
 

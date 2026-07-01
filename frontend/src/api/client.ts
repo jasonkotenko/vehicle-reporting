@@ -26,7 +26,8 @@ import type {
   UserRole,
 } from "./types";
 
-const API_BASE = (import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000").replace(/\/$/, "");
+// Empty base = same-origin requests via nginx /api proxy (works on localhost and LAN IP).
+const API_BASE = (import.meta.env.VITE_API_BASE_URL ?? "").replace(/\/$/, "");
 const TOKEN_KEY = "vvt_access_token";
 const USER_KEY = "vvt_user";
 
