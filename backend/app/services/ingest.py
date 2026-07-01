@@ -108,6 +108,26 @@ class IngestService:
             vehicle_profile_id=profile.id,
         )
 
+    def link_profile_for_plate(
+        self,
+        db: Session,
+        *,
+        normalized_plate: str | None,
+        captured_at: datetime,
+    ) -> VehicleProfile:
+        return self._upsert_vehicle_profile(
+            db,
+            normalized_plate=normalized_plate,
+            captured_at=captured_at,
+        )
+
+    def authorization_for_plate(
+        self,
+        db: Session,
+        normalized_plate: str | None,
+    ) -> AuthorizationStatus:
+        return self._resolve_authorization(db, normalized_plate)
+
     def _find_by_external_id(self, db: Session, external_id: str) -> VehicleEvent | None:
         return db.scalar(select(VehicleEvent).where(VehicleEvent.external_id == external_id))
 

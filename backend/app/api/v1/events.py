@@ -10,7 +10,13 @@ from app.core.query import parse_time_range
 from app.db.session import get_db
 from app.models.enums import AuthorizationStatus, PlateStatus
 from app.schemas.common import PaginatedResponse
+from app.schemas.corrections import (
+    CorrectPlateRequest,
+    CorrectPlateResponse,
+    EventGalleryResponse,
+)
 from app.schemas.read_api import EventDetailResponse, EventSummary
+from app.services.corrections import CorrectionService
 from app.services.read_api import ReadApiService
 
 router = APIRouter(prefix="/events", tags=["events"])
@@ -48,3 +54,27 @@ def get_event(
     db: Session = Depends(get_db),
 ) -> EventDetailResponse:
     return ReadApiService().get_event(db, event_id)
+
+
+@router.get("/{event_id}/gallery", response_model=EventGalleryResponse)
+def get_event_gallery(
+    event_id: UUID,
+    _: OperatorUser,
+    db: Session = Depends(get_db),
+) -> EventGalleryResponse:
+    return CorrectionService().get_event_gallery(db, event_id)
+
+
+@router.post("/{event_id}/correct-plate", response_model=CorrectPlateResponse)
+def correct_event_plate(
+    event_id: UUID,
+    payload: CorrectPlateRequest,
+    current_user: OperatorUser,
+    db: Session = Depends(get_db),
+) -> CorrectPlateResponse:
+    return CorrectionService().correct_plate(
+        db,
+        event_id,
+        new_plate=payload.new_plate,
+        corrected_by_user_id=current_user.id,
+    )
