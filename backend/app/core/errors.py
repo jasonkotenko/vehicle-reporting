@@ -11,6 +11,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.services.admin_errors import AdminError
 from app.services.ingest_errors import IngestError
+from app.services.read_errors import ReadError
 
 
 def _error_body(
@@ -75,6 +76,16 @@ def register_exception_handlers(app: FastAPI) -> None:
     async def admin_exception_handler(
         _request: Request,
         exc: AdminError,
+    ) -> JSONResponse:
+        return JSONResponse(
+            status_code=exc.status_code,
+            content=_error_body(status=exc.status_code, detail=exc.detail, code=exc.code),
+        )
+
+    @app.exception_handler(ReadError)
+    async def read_exception_handler(
+        _request: Request,
+        exc: ReadError,
     ) -> JSONResponse:
         return JSONResponse(
             status_code=exc.status_code,

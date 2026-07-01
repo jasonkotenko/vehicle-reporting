@@ -60,5 +60,23 @@ def require_admin(
     return user
 
 
+def require_operator(
+    db: Session = Depends(get_db),
+    credentials: HTTPAuthorizationCredentials | None = Depends(bearer_scheme),
+) -> User:
+    settings = get_settings()
+    if settings.dev_auth_bypass:
+        user = db.scalar(select(User).where(User.active.is_(True)).limit(1))
+        if user is None:
+            raise HTTPException(status_code=503, detail="No active user available")
+        return user
+
+    user = get_current_user(db=db, credentials=credentials)
+    if user.role not in {UserRole.OPERATOR, UserRole.ADMIN}:
+        raise HTTPException(status_code=403, detail="Operator access required")
+    return user
+
+
 CurrentUser = Annotated[User, Depends(get_current_user)]
 AdminUser = Annotated[User, Depends(require_admin)]
+OperatorUser = Annotated[User, Depends(require_operator)]
