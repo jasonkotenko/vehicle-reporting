@@ -17,6 +17,7 @@ class UserResponse(BaseModel):
     username: str
     display_name: str
     role: UserRole
+    active: bool
 
     model_config = {"from_attributes": True}
 

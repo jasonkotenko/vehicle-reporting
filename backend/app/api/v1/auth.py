@@ -30,3 +30,9 @@ def login(payload: LoginRequest, db: Session = Depends(get_db)) -> TokenResponse
 @router.get("/me", response_model=UserResponse)
 def get_me(current_user: CurrentUser) -> UserResponse:
     return UserResponse.model_validate(current_user)
+
+
+@router.post("/logout", status_code=204)
+def logout() -> None:
+    """Client should discard the bearer token after logout."""
+    return None

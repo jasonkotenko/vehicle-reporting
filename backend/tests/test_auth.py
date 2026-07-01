@@ -19,6 +19,7 @@ def test_login_returns_token_for_admin() -> None:
     assert body["token_type"] == "bearer"
     assert body["user"]["username"] == "admin"
     assert body["user"]["role"] == "ADMIN"
+    assert body["user"]["active"] is True
 
 
 def test_login_rejects_invalid_password() -> None:
@@ -40,3 +41,4 @@ def test_me_returns_current_user(admin_headers: dict[str, str]) -> None:
 
     assert response.status_code == 200
     assert response.json()["username"] == "admin"
+    assert response.json()["active"] is True

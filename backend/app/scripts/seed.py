@@ -4,17 +4,13 @@ from __future__ import annotations
 
 import os
 
-import bcrypt
 from sqlalchemy import select
 
 from app.core.plates import normalize_plate
+from app.core.security import hash_password
 from app.db.session import SessionLocal
 from app.models import AuthorizedVehicle, Camera, User
 from app.models.enums import UserRole, VehicleCategory, ZoneType
-
-
-def hash_password(password: str) -> str:
-    return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
 
 
 def seed() -> None:
