@@ -55,14 +55,14 @@ Expose via `GET /api/v1/roster` (step 7).
 
 ## Deliverables
 
-- [ ] Trip builder service with unit tests covering:
+- [x] Trip builder service with unit tests covering:
   - Standard entry → internal → exit
   - Entry only (open trip)
   - Exit only (incomplete)
   - Double entry without exit
   - Internal without entry
-- [ ] `trip_events` ordering populated correctly
-- [ ] Hook called from ingest pipeline (step 4)
+- [x] `trip_events` ordering populated correctly
+- [x] Hook called from ingest pipeline (step 4)
 
 ## Acceptance criteria
 
