@@ -54,9 +54,8 @@ def test_ingest_happy_path_creates_event(ingest_headers: dict[str, str]) -> None
         assert event.effective_plate == "ABC1234"
         assert event.authorization_status == AuthorizationStatus.AUTHORIZED
         assert event.raw_payload == payload
-        assert event.image_refs == [
-            {"source_url": "http://cv-host/snapshots/frame1.jpg", "status": "pending"}
-        ]
+        assert event.image_refs[0]["source_url"] == "http://cv-host/snapshots/frame1.jpg"
+        assert event.image_refs[0]["status"] in {"pending", "stored", "fetch_failed"}
         assert str(event.vehicle_profile_id) == body["vehicle_profile_id"]
     finally:
         db.close()

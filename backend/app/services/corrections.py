@@ -20,6 +20,7 @@ from app.schemas.corrections import (
 )
 from app.schemas.read_api import EntityLinks
 from app.services.correction_errors import CorrectionError
+from app.services.image_tokens import enrich_image_refs
 from app.services.ingest import IngestService
 from app.services.read_errors import ReadError
 from app.services.trips import recompute_trips_for_profile
@@ -33,7 +34,7 @@ class CorrectionService:
 
         return EventGalleryResponse(
             event_id=event.id,
-            image_refs=deepcopy(event.image_refs),
+            image_refs=enrich_image_refs(deepcopy(event.image_refs)),
             plate_status=event.plate_status,
             raw_plate=event.raw_plate,
             effective_plate=event.effective_plate,

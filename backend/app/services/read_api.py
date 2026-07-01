@@ -32,6 +32,7 @@ from app.schemas.read_api import (
     VehicleProfileDetail,
     VehicleSearchItem,
 )
+from app.services.image_tokens import enrich_image_refs
 from app.services.read_errors import ReadError
 from app.services.trips import get_active_roster, get_trip_with_events
 
@@ -215,7 +216,7 @@ class ReadApiService:
             zone_type=summary.zone_type,
             vehicle_profile_id=event.vehicle_profile_id,
             trip_id=trip_id,
-            image_refs=event.image_refs,
+            image_refs=enrich_image_refs(event.image_refs),
             raw_payload=event.raw_payload,
             links=EntityLinks(
                 self=link_event(event.id),

@@ -2,12 +2,14 @@
 
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 
 from app.api.deps import OperatorUser
 from app.core.query import parse_time_range
 from app.db.session import get_db
+from app.models import VehicleEvent
 from app.models.enums import AuthorizationStatus, PlateStatus
 from app.schemas.common import PaginatedResponse
 from app.schemas.corrections import (
@@ -17,7 +19,9 @@ from app.schemas.corrections import (
 )
 from app.schemas.read_api import EventDetailResponse, EventSummary
 from app.services.corrections import CorrectionService
+from app.services.image_tokens import build_signed_image_url
 from app.services.read_api import ReadApiService
+from app.services.read_errors import ReadError
 
 router = APIRouter(prefix="/events", tags=["events"])
 
@@ -78,3 +82,24 @@ def correct_event_plate(
         new_plate=payload.new_plate,
         corrected_by_user_id=current_user.id,
     )
+
+
+@router.get("/{event_id}/images/{index}")
+def redirect_event_image(
+    event_id: UUID,
+    index: int,
+    _: OperatorUser,
+    db: Session = Depends(get_db),
+) -> RedirectResponse:
+    event = db.get(VehicleEvent, event_id)
+    if event is None:
+        raise ReadError("Event not found", code="event_not_found")
+
+    if index < 0 or index >= len(event.image_refs):
+        raise HTTPException(status_code=404, detail="Image not found")
+
+    ref = event.image_refs[index]
+    if ref.get("status") != "stored" or not ref.get("key"):
+        raise HTTPException(status_code=404, detail="Image not available")
+
+    return RedirectResponse(build_signed_image_url(ref["key"]), status_code=307)

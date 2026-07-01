@@ -11,6 +11,8 @@ os.environ.setdefault(
     os.environ.get("DATABASE_URL", "postgresql+psycopg://vvt:change-me@db:5432/vvt"),
 )
 os.environ.setdefault("CORS_ORIGINS", "http://localhost:3000")
+os.environ.setdefault("IMAGE_FETCH_TIMEOUT_SECONDS", "1")
+os.environ.setdefault("PUBLIC_API_URL", "http://testserver")
 
 from app.core.security import hash_password
 from app.db.session import SessionLocal
@@ -57,3 +59,15 @@ def operator_headers() -> dict[str, str]:
     assert response.status_code == 200, response.text
     token = response.json()["access_token"]
     return {"Authorization": f"Bearer {token}"}
+
+
+@pytest.fixture(autouse=True)
+def disable_background_image_fetch(request, monkeypatch):
+    """Avoid slow HTTP fetches to cv-host during unrelated ingest tests."""
+    if request.module.__name__ == "tests.test_images":
+        return
+
+    def noop(_event_id, _image_urls) -> None:
+        return None
+
+    monkeypatch.setattr("app.api.v1.ingest.enqueue_image_fetch", noop)

@@ -1,17 +1,19 @@
-"""Image fetch enqueue stub — implemented in step 11."""
+"""Image fetch background hook."""
 
 from __future__ import annotations
 
 import logging
 from uuid import UUID
 
+from app.services.image_fetch import ImageFetchService
+
 logger = logging.getLogger(__name__)
 
 
 def enqueue_image_fetch(event_id: UUID, image_urls: list[str]) -> None:
-    """Background hook for step 11 to fetch and store CV images."""
-    logger.info(
-        "Image fetch queued for event %s (%d url(s)); step 11 not implemented yet",
-        event_id,
-        len(image_urls),
-    )
+    """Fetch and store CV images after ingest commits."""
+    del image_urls  # refs are read from the persisted event
+    try:
+        ImageFetchService().fetch_event_images(event_id)
+    except Exception:
+        logger.exception("Background image fetch failed for event %s", event_id)
