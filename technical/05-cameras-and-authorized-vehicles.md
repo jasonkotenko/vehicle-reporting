@@ -61,10 +61,10 @@ Server normalizes plate on write. Manual admin entry only for MVP; CSV bulk impo
 
 ## Deliverables
 
-- [ ] CRUD routes and services for cameras and authorized vehicles
-- [ ] Admin role guard (or temporary dev bypass flagged in env)
-- [ ] OpenAPI documentation
-- [ ] Tests for CRUD and plate normalization on create
+- [x] CRUD routes and services for cameras and authorized vehicles
+- [x] Admin role guard (or temporary dev bypass flagged in env)
+- [x] OpenAPI documentation
+- [x] Tests for CRUD and plate normalization on create
 
 ## Acceptance criteria
 

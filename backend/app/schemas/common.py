@@ -10,15 +10,15 @@ T = TypeVar("T")
 
 
 class PaginatedResponse(BaseModel, Generic[T]):
-  items: list[T]
-  total: int
-  page: int = Field(ge=1)
-  page_size: int = Field(ge=1, le=200)
+    items: list[T]
+    total: int
+    page: int = Field(ge=1)
+    page_size: int = Field(ge=1, le=200)
 
 
 class ErrorResponse(BaseModel):
-  type: str = "about:blank"
-  title: str
-  status: int
-  detail: str
-  code: str
+    type: str = "about:blank"
+    title: str
+    status: int
+    detail: str
+    code: str

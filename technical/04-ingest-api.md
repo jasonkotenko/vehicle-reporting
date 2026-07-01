@@ -71,11 +71,11 @@ CV system POSTs directly to this endpoint.
 
 ## Deliverables
 
-- [ ] Pydantic schemas `IngestEventRequest`, `IngestEventResponse`
-- [ ] Route `POST /api/v1/ingest/events`
-- [ ] Ingest service with idempotency
-- [ ] Background task hook for image fetch (stub OK until step 11)
-- [ ] Tests: happy path, unknown camera, duplicate external_id, unreadable plate, multi-frame `image_urls`
+- [x] Pydantic schemas `IngestEventRequest`, `IngestEventResponse`
+- [x] Route `POST /api/v1/ingest/events`
+- [x] Ingest service with idempotency
+- [x] Background task hook for image fetch (stub OK until step 11)
+- [x] Tests: happy path, unknown camera, duplicate external_id, unreadable plate, multi-frame `image_urls`
 
 ## Acceptance criteria
 

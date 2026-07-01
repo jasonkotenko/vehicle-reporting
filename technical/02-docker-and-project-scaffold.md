@@ -123,11 +123,11 @@ seed:        docker compose exec api python -m app.scripts.seed  # dev fixtures
 
 ## Deliverables
 
-- [ ] `docker-compose.yml` + `.env.example`
-- [ ] `Makefile` with targets above
-- [ ] Backend and frontend Dockerfiles
-- [ ] `.gitignore` (`.env`, `node_modules`, `__pycache__`, volumes)
-- [ ] `docker-compose.override.yml.example` for local dev hot-reload (optional)
+- [x] `docker-compose.yml` + `.env.example`
+- [x] `Makefile` with targets above
+- [x] Backend and frontend Dockerfiles
+- [x] `.gitignore` (`.env`, `node_modules`, `__pycache__`, volumes)
+- [x] `docker-compose.override.yml.example` for local dev hot-reload (optional)
 
 ## Acceptance criteria
 

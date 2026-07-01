@@ -22,6 +22,7 @@ class Settings(BaseSettings):
     image_storage_backend: str = "local"
     log_level: str = "INFO"
     public_api_url: str = Field(default="http://localhost:8000", validation_alias="PUBLIC_API_URL")
+    dev_auth_bypass: bool = Field(default=False, validation_alias="DEV_AUTH_BYPASS")
 
     @field_validator("display_timezone")
     @classmethod

@@ -46,8 +46,9 @@ users ───────────────┘ (audit actor)
 | raw_payload | JSONB | Full original JSON (immutable) |
 | authorization_status | ENUM | `AUTHORIZED`, `VISITOR`, `UNKNOWN` — denormalized at ingest |
 | ingested_at | TIMESTAMPTZ | Server receipt time |
+| vehicle_profile_id | UUID FK → vehicle_profiles | Set at ingest |
 
-**Indexes:** `(normalized_plate, captured_at)`, `(camera_id, captured_at)`, `(captured_at)`, unique partial on `external_id` where not null.
+**Indexes:** `(normalized_plate, captured_at)`, `(camera_id, captured_at)`, `(captured_at)`, `(vehicle_profile_id, captured_at)`, unique partial on `external_id` where not null.
 
 ### `vehicle_profiles`
 
@@ -129,10 +130,10 @@ Ordered membership of events in a trip.
 
 ## Deliverables
 
-- [ ] SQLAlchemy models in `backend/app/models/`
-- [ ] Alembic env configured with `DATABASE_URL`
-- [ ] Initial migration `001_initial_schema`
-- [ ] `make migrate` applies cleanly on fresh volume
+- [x] SQLAlchemy models in `backend/app/models/`
+- [x] Alembic env configured with `DATABASE_URL`
+- [x] Initial migration `001_initial_schema`
+- [x] `make migrate` applies cleanly on fresh volume
 
 ## Acceptance criteria
 

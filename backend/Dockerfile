@@ -13,6 +13,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY app ./app
 COPY tests ./tests
+COPY alembic ./alembic
+COPY alembic.ini .
 COPY pyproject.toml .
 
 RUN chown -R app:app /app

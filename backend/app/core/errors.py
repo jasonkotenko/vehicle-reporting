@@ -9,6 +9,9 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
+from app.services.admin_errors import AdminError
+from app.services.ingest_errors import IngestError
+
 
 def _error_body(
     *,
@@ -56,4 +59,24 @@ def register_exception_handlers(app: FastAPI) -> None:
                 code="validation_error",
                 extra={"errors": exc.errors()},
             ),
+        )
+
+    @app.exception_handler(IngestError)
+    async def ingest_exception_handler(
+        _request: Request,
+        exc: IngestError,
+    ) -> JSONResponse:
+        return JSONResponse(
+            status_code=exc.status_code,
+            content=_error_body(status=exc.status_code, detail=exc.detail, code=exc.code),
+        )
+
+    @app.exception_handler(AdminError)
+    async def admin_exception_handler(
+        _request: Request,
+        exc: AdminError,
+    ) -> JSONResponse:
+        return JSONResponse(
+            status_code=exc.status_code,
+            content=_error_body(status=exc.status_code, detail=exc.detail, code=exc.code),
         )
