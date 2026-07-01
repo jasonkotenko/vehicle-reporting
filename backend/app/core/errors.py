@@ -1,0 +1,59 @@
+"""Shared API error handling."""
+
+from __future__ import annotations
+
+from typing import Any
+
+from fastapi import FastAPI, Request
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
+from starlette.exceptions import HTTPException as StarletteHTTPException
+
+
+def _error_body(
+    *,
+    status: int,
+    detail: str,
+    code: str,
+    extra: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    body: dict[str, Any] = {
+        "type": "about:blank",
+        "title": detail,
+        "status": status,
+        "detail": detail,
+        "code": code,
+    }
+    if extra:
+        body.update(extra)
+    return body
+
+
+def register_exception_handlers(app: FastAPI) -> None:
+    @app.exception_handler(StarletteHTTPException)
+    async def http_exception_handler(
+        _request: Request,
+        exc: StarletteHTTPException,
+    ) -> JSONResponse:
+        code = "http_error"
+        if isinstance(exc.detail, str) and exc.detail:
+            code = exc.detail.lower().replace(" ", "_")
+        return JSONResponse(
+            status_code=exc.status_code,
+            content=_error_body(status=exc.status_code, detail=str(exc.detail), code=code),
+        )
+
+    @app.exception_handler(RequestValidationError)
+    async def validation_exception_handler(
+        _request: Request,
+        exc: RequestValidationError,
+    ) -> JSONResponse:
+        return JSONResponse(
+            status_code=422,
+            content=_error_body(
+                status=422,
+                detail="Request validation failed",
+                code="validation_error",
+                extra={"errors": exc.errors()},
+            ),
+        )
