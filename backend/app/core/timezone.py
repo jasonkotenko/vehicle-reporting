@@ -26,3 +26,8 @@ def parse_display_datetime(value: str, tz_name: str) -> datetime:
         parsed = parsed.replace(tzinfo=display_tz)
 
     return parsed.astimezone(UTC)
+
+
+def format_display_datetime(dt: datetime, tz_name: str) -> str:
+    """Format a datetime for human-readable exports in the display timezone."""
+    return to_display(dt, tz_name).strftime("%Y-%m-%d %H:%M:%S %Z")
